@@ -13,11 +13,9 @@ const PARTYKIT_URL = `${PARTYKIT_PROTOCOL}://${PARTYKIT_HOST}`;
 const config = {
     rewrites: async () => [
         {
-            // forward room authentication request to partykit
             source: "/partykit/auth",
-            // include connection id in the query
             has: [{ type: "query", key: "_pk", value: "(?<pk>.*)" }],
-            destination: PARTYKIT_URL + "/party/partykit-room/auth?_pk=:pk",
+            destination: `${PARTYKIT_URL}/party/partykit-room/auth?_pk=:pk`,
         },
     ],
 };

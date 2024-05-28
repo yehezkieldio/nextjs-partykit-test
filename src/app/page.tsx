@@ -1,4 +1,5 @@
-import { signIn } from "@/server/auth";
+import { Button } from "@/components/ui/button";
+import { getAuth, signIn, signOut } from "@/server/auth";
 
 export function SignIn() {
     return (
@@ -8,12 +9,31 @@ export function SignIn() {
                 await signIn();
             }}
         >
-            <button type="submit">Sign in</button>
+            <Button variant="outline" type="submit">
+                Sign in
+            </Button>
+        </form>
+    );
+}
+
+export function SignOut() {
+    return (
+        <form
+            action={async () => {
+                "use server";
+                await signOut();
+            }}
+        >
+            <Button variant="outline" type="submit">
+                Sign Out
+            </Button>
         </form>
     );
 }
 
 export default async function Home() {
+    const session = await getAuth();
+
     return (
         <main className="p-8">
             <h1 className="text-xl">Hello, world!</h1>
@@ -21,7 +41,14 @@ export default async function Home() {
                 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit sed sequi ut. Sint, harum.
             </p>
             <br />
-            <SignIn />
+            {session?.user ? (
+                <div>
+                    <p className="mb-4">Hello, {session.user.name}! You are signed in.</p>
+                    <SignOut />
+                </div>
+            ) : (
+                <SignIn />
+            )}
         </main>
     );
 }

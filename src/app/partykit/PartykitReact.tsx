@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
-
-import type { Session, User } from "next-auth";
+import type { Session } from "next-auth";
 import type PartySocket from "partysocket";
 
 import usePartySocket from "partysocket/react";
@@ -11,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { env } from "@/env";
 
 const identify = async (socket: PartySocket) => {
-    // the ./auth route will authenticate the connection to the partykit room
     const url = `${window.location.pathname}/auth?_pk=${socket._pk}`;
     const req = await fetch(url, { method: "POST" });
 
@@ -22,14 +19,11 @@ const identify = async (socket: PartySocket) => {
 };
 
 export const PartykitReact = ({ session }: { session: Session }) => {
-    const [user, setUser] = useState<User | null>(null);
-
     const ws = usePartySocket({
-        host: env.NEXT_PUBLIC_PARTYKIT_HOST, // or localhost:1999 in dev
+        host: env.NEXT_PUBLIC_PARTYKIT_HOST,
         room: "partykit-room",
 
         onOpen(e) {
-            // identify user upon connection
             if (session.user) {
                 void identify(e.target as PartySocket);
             }
@@ -41,6 +35,14 @@ export const PartykitReact = ({ session }: { session: Session }) => {
 
     return (
         <div className="mt-8 border p-4">
+            <p>
+                {session.user ? (
+                    <span>Hello, {session.user.name}! You are connected to the PartyKit room.</span>
+                ) : (
+                    <span>Not connected to PartyKit room.</span>
+                )}
+            </p>
+            <br />
             <Button
                 variant="outline"
                 onClick={() => {
