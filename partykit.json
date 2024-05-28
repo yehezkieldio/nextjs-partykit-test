@@ -1,0 +1,6 @@
+{
+    "$schema": "https://www.partykit.io/schema.json",
+    "name": "t3-custom-template-party",
+    "main": "src/party/main.ts",
+    "compatibilityDate": "2024-05-28"
+}
